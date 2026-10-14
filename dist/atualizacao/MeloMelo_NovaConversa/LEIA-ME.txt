@@ -1,0 +1,48 @@
+MELO & MELO ATENDIMENTO — FOTOS DE PERFIL
+
+Este pacote parte do pacote anterior MeloMelo_NovaConversa_Atualizado e mantém as funcionalidades já existentes, incluindo:
+- login e autenticação;
+- conversas e grupos;
+- correções de recebimento de mensagens de grupos e assinaturas;
+- botão Nova conversa, contatos do WhatsApp e abertura por número manual.
+
+Melhorias desta versão:
+- consulta das fotos de perfil pela Evolution API;
+- redução de chamadas repetidas de sincronização de grupos: a atualização periódica da lista de grupos passa de 3 segundos para 60 segundos, mantendo a atualização das mensagens da conversa aberta a cada 3 segundos;
+- consultas de fotos em lotes pequenos e sequenciais para reduzir o risco de rate-overlimit na Evolution API;
+- exibição das fotos na lista de conversas individuais, lista de grupos e cabeçalho da conversa/grupo;
+- avatar original como fallback quando não existe foto ou a URL não carrega;
+- cache no backend e consultas em lotes para reduzir chamadas repetidas.
+
+A API usada é POST /chat/fetchProfilePictureUrl/{instance}. As credenciais da Evolution ficam somente no backend. Não é necessário alterar .env, banco de dados, Docker ou configuração da Evolution API.
+
+INSTALAÇÃO
+1. Extraia o ZIP para:
+   C:\whatsapp-atendimento\atualizacao
+
+2. Abra o PowerShell e execute:
+   Set-ExecutionPolicy -Scope Process Bypass -Force
+   $instalador = Get-ChildItem "C:\whatsapp-atendimento\atualizacao" -Filter "INSTALAR.ps1" -Recurse | Select-Object -First 1
+   if (-not $instalador) { throw "INSTALAR.ps1 não encontrado. Confira se o ZIP foi extraído." }
+   & $instalador.FullName
+
+3. Valide o frontend:
+   cd C:\whatsapp-atendimento\frontend
+   npm.cmd run build
+
+4. Se o build terminar sem erros, reinicie o serviço de backend conforme o nome usado na sua instalação. Se o projeto for iniciado manualmente, reinicie-o pelo terminal habitual.
+
+5. Atualize o navegador com Ctrl+F5.
+
+O instalador cria cópias de segurança de App.jsx e backend/index.js antes de substituí-los. A pasta de backup será criada em:
+   C:\whatsapp-atendimento\backup_fotos_perfil_DATA-HORA
+
+TESTE
+- Abra o sistema e confirme que o login continua funcionando.
+- Verifique as fotos na lista de conversas e ao abrir uma conversa.
+- Confira grupos que possuam foto de perfil.
+- Contatos sem foto devem continuar exibindo o avatar padrão.
+- Envie e receba uma mensagem para confirmar que as funções anteriores continuam funcionando.
+
+LIMITAÇÕES
+A foto só aparece se a Evolution API conseguir retorná-la e se a URL temporária continuar válida. A validação final da conexão depende da instância WhatsApp e do Windows do usuário; esse ambiente não tem acesso à instância real para executar esse teste.

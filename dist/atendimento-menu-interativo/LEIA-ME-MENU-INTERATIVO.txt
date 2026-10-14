@@ -1,0 +1,43 @@
+ATENDIMENTO MELO & MELO — MENU INTERATIVO DE DEPARTAMENTOS
+
+Objetivo
+- Enviar uma lista interativa do WhatsApp para o cliente selecionar o departamento sem digitar o nome ou número.
+- Carregar automaticamente os departamentos ativos da tabela departments.
+- Reconhecer a resposta da lista interativa (listResponseMessage) e vincular a conversa ao departamento selecionado.
+- Enviar apenas um menu por ciclo de atendimento e aguardar a escolha. Mensagens adicionais enquanto aguarda não devem reenviar o menu.
+- Preservar a assinatura e a formatação visual do frontend incluídas neste pacote.
+
+IMPORTANTE
+Esta implementação usa uma LISTA INTERATIVA do WhatsApp (seleção por toque), não uma enquete de votação. A lista é enviada pelo endpoint /message/sendList da Evolution API. Se a instância/API rejeitar o menu interativo, o backend registra o erro e usa uma alternativa textual para evitar que o atendimento fique sem resposta; nesse cenário de fallback, o cliente precisará digitar.
+
+ARQUIVOS INCLUÍDOS
+- backend/index.js
+- frontend/src/App.jsx
+
+INSTALAÇÃO
+1. Faça backup de C:\whatsapp-atendimento.
+2. Extraia o ZIP em uma pasta temporária.
+3. Copie somente os dois arquivos incluídos para os mesmos caminhos dentro de C:\whatsapp-atendimento, substituindo os arquivos correspondentes.
+4. Não substitua .env, backend/package.json, backend/src, arquivos Docker, nem qualquer arquivo da Evolution API.
+5. No PowerShell:
+
+   cd C:\whatsapp-atendimento\backend
+   node --check index.js
+
+   cd C:\whatsapp-atendimento\frontend
+   npm.cmd run build
+
+6. Se ambos terminarem sem erros:
+
+   Restart-Service "MeloMelo Backend"
+   Get-Service "MeloMelo Backend"
+
+TESTE
+- Use um número de teste que não esteja vinculado a departamento.
+- Envie uma mensagem para o WhatsApp conectado.
+- O bot deve enviar uma lista com os departamentos ativos.
+- Toque em um departamento. A conversa deve ser vinculada a ele.
+- Envie outra mensagem antes de escolher: o bot deve continuar aguardando sem reenviar o menu.
+
+OBSERVAÇÃO
+A sintaxe do backend foi validada. Não foi possível testar o envio real com a instância Evolution API do ambiente do usuário; valide o fluxo com um número controlado. Não recrie nem altere os contêineres da Evolution API.
